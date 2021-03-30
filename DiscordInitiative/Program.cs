@@ -7,17 +7,39 @@ using System.Threading.Tasks;
 
 namespace DiscordInitiative
 {
-    class Program
+    public class Program
     {
-		public static string _botToken = "";
-		public static void Main(string[] args)
-			=> new Program().MainAsync().GetAwaiter().GetResult();
+        public struct GlobalConfigStruct
+        {
+            public static string _botToken = "";
+		}
 
-		public async Task MainAsync()
+        public static void SetArgs(string[] args)
+        {
+            if (args.Length > 0)
+            {
+
+                foreach (string arg in args)
+                {
+                    Console.WriteLine("Evaluating: " + arg);
+                    if (arg.Contains("--token="))
+                    {
+                        GlobalConfigStruct._botToken = arg.Split("=")[1];
+                    }
+
+                }
+            }
+        }
+
+		public static void Main(string[] args)
+			=> new Program().MainAsync(args).GetAwaiter().GetResult();
+
+		public async Task MainAsync(string[] args)
 		{
+			SetArgs(args);
 			DiscordSocketClient client = new DiscordSocketClient();
 			client.Log += Log;
-			client.LoginAsync(TokenType.Bot, _botToken);
+			client.LoginAsync(TokenType.Bot, GlobalConfigStruct._botToken);
 			client.StartAsync();
 			await Task.Delay(-1);
 		}
