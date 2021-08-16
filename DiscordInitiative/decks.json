@@ -265,13 +265,13 @@
             },
             {
                 "suit": "joker",
-                "name": "J",
-                "value": 0
+                "name": "",
+                "value": 99
             },
             {
-                "suit": "joker",
-                "name": "J",
-                "value": 1
+              "suit": "joker",
+              "name": "",
+              "value": 98
             }
         ]
     },
@@ -541,12 +541,12 @@
             {
                 "suit": "joker",
                 "name": "",
-                "value": 0
+                "value": 99
             },
             {
                 "suit": "joker",
                 "name": "",
-                "value": 1
+                "value": 98
             }
         ]
     }
