@@ -1,554 +1,829 @@
-﻿{
+{
   "decks": [
     {
-        "deckName": "",
-        "cards": [
-            {
-                "suit": "hearts",
-                "name": 2,
-                "value": 28
-            },
-            {
-                "suit": "hearts",
-                "name": 3,
-                "value": 29
-            },
-            {
-                "suit": "hearts",
-                "name": 4,
-                "value": 30
-            },
-            {
-                "suit": "hearts",
-                "name": 5,
-                "value": 31
-            },
-            {
-                "suit": "hearts",
-                "name": 6,
-                "value": 32
-            },
-            {
-                "suit": "hearts",
-                "name": 7,
-                "value": 33
-            },
-            {
-                "suit": "hearts",
-                "name": 8,
-                "value": 34
-            },
-            {
-                "suit": "hearts",
-                "name": 9,
-                "value": 35
-            },
-            {
-                "suit": "hearts",
-                "name": 10,
-                "value": 36
-            },
-            {
-                "suit": "hearts",
-                "name": "J",
-                "value": 37
-            },
-            {
-                "suit": "hearts",
-                "name": "Q",
-                "value": 38
-            },
-            {
-                "suit": "hearts",
-                "name": "K",
-                "value": 39
-            },
-            {
-                "suit": "hearts",
-                "name": "A",
-                "value": 40
-            },
-            {
-                "suit": "diamonds",
-                "name": 2,
-                "value": 41
-            },
-            {
-                "suit": "diamonds",
-                "name": 3,
-                "value": 42
-            },
-            {
-                "suit": "diamonds",
-                "name": 4,
-                "value": 43
-            },
-            {
-                "suit": "diamonds",
-                "name": 5,
-                "value": 44
-            },
-            {
-                "suit": "diamonds",
-                "name": 6,
-                "value": 45
-            },
-            {
-                "suit": "diamonds",
-                "name": 7,
-                "value": 46
-            },
-            {
-                "suit": "diamonds",
-                "name": 8,
-                "value": 47
-            },
-            {
-                "suit": "diamonds",
-                "name": 9,
-                "value": 48
-            },
-            {
-                "suit": "diamonds",
-                "name": 10,
-                "value": 49
-            },
-            {
-                "suit": "diamonds",
-                "name": "J",
-                "value": 50
-            },
-            {
-                "suit": "diamonds",
-                "name": "Q",
-                "value": 51
-            },
-            {
-                "suit": "diamonds",
-                "name": "K",
-                "value": 52
-            },
-            {
-                "suit": "diamonds",
-                "name": "A",
-                "value": 53
-            },
-            {
-                "suit": "clubs",
-                "name": 2,
-                "value": 2
-            },
-            {
-                "suit": "clubs",
-                "name": 3,
-                "value": 3
-            },
-            {
-                "suit": "clubs",
-                "name": 4,
-                "value": 3
-            },
-            {
-                "suit": "clubs",
-                "name": 5,
-                "value": 5
-            },
-            {
-                "suit": "clubs",
-                "name": 6,
-                "value": 6
-            },
-            {
-                "suit": "clubs",
-                "name": 7,
-                "value": 7
-            },
-            {
-                "suit": "clubs",
-                "name": 8,
-                "value": 8
-            },
-            {
-                "suit": "clubs",
-                "name": 9,
-                "value": 9
-            },
-            {
-                "suit": "clubs",
-                "name": 10,
-                "value": 10
-            },
-            {
-                "suit": "clubs",
-                "name": "J",
-                "value": 11
-            },
-            {
-                "suit": "clubs",
-                "name": "Q",
-                "value": 12
-            },
-            {
-                "suit": "clubs",
-                "name": "K",
-                "value": 13
-            },
-            {
-                "suit": "clubs",
-                "name": "A",
-                "value": 14
-            },
-            {
-                "suit": "spades",
-                "name": 2,
-                "value": 15
-            },
-            {
-                "suit": "spades",
-                "name": 3,
-                "value": 16
-            },
-            {
-                "suit": "spades",
-                "name": 4,
-                "value": 17
-            },
-            {
-                "suit": "spades",
-                "name": 5,
-                "value": 18
-            },
-            {
-                "suit": "spades",
-                "name": 6,
-                "value": 19
-            },
-            {
-                "suit": "spades",
-                "name": 7,
-                "value": 20
-            },
-            {
-                "suit": "spades",
-                "name": 8,
-                "value": 21
-            },
-            {
-                "suit": "spades",
-                "name": 9,
-                "value": 22
-            },
-            {
-                "suit": "spades",
-                "name": 10,
-                "value": 23
-            },
-            {
-                "suit": "spades",
-                "name": "J",
-                "value": 24
-            },
-            {
-                "suit": "spades",
-                "name": "Q",
-                "value": 25
-            },
-            {
-                "suit": "spades",
-                "name": "K",
-                "value": 26
-            },
-            {
-                "suit": "spades",
-                "name": "A",
-                "value": 27
-            },
-            {
-                "suit": "joker",
-                "name": "",
-                "value": 99
-            },
-            {
-              "suit": "joker",
-              "name": "",
-              "value": 98
-            }
-        ]
+      "deckName": "",
+      "cards": [
+        {
+          "suit": "hearts",
+          "name": 2,
+          "value": 28
+        },
+        {
+          "suit": "hearts",
+          "name": 3,
+          "value": 29
+        },
+        {
+          "suit": "hearts",
+          "name": 4,
+          "value": 30
+        },
+        {
+          "suit": "hearts",
+          "name": 5,
+          "value": 31
+        },
+        {
+          "suit": "hearts",
+          "name": 6,
+          "value": 32
+        },
+        {
+          "suit": "hearts",
+          "name": 7,
+          "value": 33
+        },
+        {
+          "suit": "hearts",
+          "name": 8,
+          "value": 34
+        },
+        {
+          "suit": "hearts",
+          "name": 9,
+          "value": 35
+        },
+        {
+          "suit": "hearts",
+          "name": 10,
+          "value": 36
+        },
+        {
+          "suit": "hearts",
+          "name": "J",
+          "value": 37
+        },
+        {
+          "suit": "hearts",
+          "name": "Q",
+          "value": 38
+        },
+        {
+          "suit": "hearts",
+          "name": "K",
+          "value": 39
+        },
+        {
+          "suit": "hearts",
+          "name": "A",
+          "value": 40
+        },
+        {
+          "suit": "diamonds",
+          "name": 2,
+          "value": 41
+        },
+        {
+          "suit": "diamonds",
+          "name": 3,
+          "value": 42
+        },
+        {
+          "suit": "diamonds",
+          "name": 4,
+          "value": 43
+        },
+        {
+          "suit": "diamonds",
+          "name": 5,
+          "value": 44
+        },
+        {
+          "suit": "diamonds",
+          "name": 6,
+          "value": 45
+        },
+        {
+          "suit": "diamonds",
+          "name": 7,
+          "value": 46
+        },
+        {
+          "suit": "diamonds",
+          "name": 8,
+          "value": 47
+        },
+        {
+          "suit": "diamonds",
+          "name": 9,
+          "value": 48
+        },
+        {
+          "suit": "diamonds",
+          "name": 10,
+          "value": 49
+        },
+        {
+          "suit": "diamonds",
+          "name": "J",
+          "value": 50
+        },
+        {
+          "suit": "diamonds",
+          "name": "Q",
+          "value": 51
+        },
+        {
+          "suit": "diamonds",
+          "name": "K",
+          "value": 52
+        },
+        {
+          "suit": "diamonds",
+          "name": "A",
+          "value": 53
+        },
+        {
+          "suit": "clubs",
+          "name": 2,
+          "value": 2
+        },
+        {
+          "suit": "clubs",
+          "name": 3,
+          "value": 3
+        },
+        {
+          "suit": "clubs",
+          "name": 4,
+          "value": 3
+        },
+        {
+          "suit": "clubs",
+          "name": 5,
+          "value": 5
+        },
+        {
+          "suit": "clubs",
+          "name": 6,
+          "value": 6
+        },
+        {
+          "suit": "clubs",
+          "name": 7,
+          "value": 7
+        },
+        {
+          "suit": "clubs",
+          "name": 8,
+          "value": 8
+        },
+        {
+          "suit": "clubs",
+          "name": 9,
+          "value": 9
+        },
+        {
+          "suit": "clubs",
+          "name": 10,
+          "value": 10
+        },
+        {
+          "suit": "clubs",
+          "name": "J",
+          "value": 11
+        },
+        {
+          "suit": "clubs",
+          "name": "Q",
+          "value": 12
+        },
+        {
+          "suit": "clubs",
+          "name": "K",
+          "value": 13
+        },
+        {
+          "suit": "clubs",
+          "name": "A",
+          "value": 14
+        },
+        {
+          "suit": "spades",
+          "name": 2,
+          "value": 15
+        },
+        {
+          "suit": "spades",
+          "name": 3,
+          "value": 16
+        },
+        {
+          "suit": "spades",
+          "name": 4,
+          "value": 17
+        },
+        {
+          "suit": "spades",
+          "name": 5,
+          "value": 18
+        },
+        {
+          "suit": "spades",
+          "name": 6,
+          "value": 19
+        },
+        {
+          "suit": "spades",
+          "name": 7,
+          "value": 20
+        },
+        {
+          "suit": "spades",
+          "name": 8,
+          "value": 21
+        },
+        {
+          "suit": "spades",
+          "name": 9,
+          "value": 22
+        },
+        {
+          "suit": "spades",
+          "name": 10,
+          "value": 23
+        },
+        {
+          "suit": "spades",
+          "name": "J",
+          "value": 24
+        },
+        {
+          "suit": "spades",
+          "name": "Q",
+          "value": 25
+        },
+        {
+          "suit": "spades",
+          "name": "K",
+          "value": 26
+        },
+        {
+          "suit": "spades",
+          "name": "A",
+          "value": 27
+        },
+        {
+          "suit": "joker",
+          "name": "",
+          "value": 99
+        },
+        {
+          "suit": "joker",
+          "name": "",
+          "value": 98
+        }
+      ]
     },
     {
-        "deckName": "Chronicles",
-        "cards": [
-            {
-                "suit": "hearts",
-                "name": 2,
-                "value": 28
-            },
-            {
-                "suit": "hearts",
-                "name": 3,
-                "value": 29
-            },
-            {
-                "suit": "hearts",
-                "name": 4,
-                "value": 30
-            },
-            {
-                "suit": "hearts",
-                "name": 5,
-                "value": 31
-            },
-            {
-                "suit": "hearts",
-                "name": 6,
-                "value": 32
-            },
-            {
-                "suit": "hearts",
-                "name": 7,
-                "value": 33
-            },
-            {
-                "suit": "hearts",
-                "name": 8,
-                "value": 34
-            },
-            {
-                "suit": "hearts",
-                "name": 9,
-                "value": 35
-            },
-            {
-                "suit": "hearts",
-                "name": 10,
-                "value": 36
-            },
-            {
-                "suit": "hearts",
-                "name": "J",
-                "value": 37
-            },
-            {
-                "suit": "hearts",
-                "name": "Q",
-                "value": 38
-            },
-            {
-                "suit": "hearts",
-                "name": "K",
-                "value": 39
-            },
-            {
-                "suit": "hearts",
-                "name": "A",
-                "value": 40
-            },
-            {
-                "suit": "diamonds",
-                "name": 2,
-                "value": 41
-            },
-            {
-                "suit": "diamonds",
-                "name": 3,
-                "value": 42
-            },
-            {
-                "suit": "diamonds",
-                "name": 4,
-                "value": 43
-            },
-            {
-                "suit": "diamonds",
-                "name": 5,
-                "value": 44
-            },
-            {
-                "suit": "diamonds",
-                "name": 6,
-                "value": 45
-            },
-            {
-                "suit": "diamonds",
-                "name": 7,
-                "value": 46
-            },
-            {
-                "suit": "diamonds",
-                "name": 8,
-                "value": 47
-            },
-            {
-                "suit": "diamonds",
-                "name": 9,
-                "value": 48
-            },
-            {
-                "suit": "diamonds",
-                "name": 10,
-                "value": 49
-            },
-            {
-                "suit": "diamonds",
-                "name": "J",
-                "value": 50
-            },
-            {
-                "suit": "diamonds",
-                "name": "Q",
-                "value": 51
-            },
-            {
-                "suit": "diamonds",
-                "name": "K",
-                "value": 52
-            },
-            {
-                "suit": "diamonds",
-                "name": "A",
-                "value": 53
-            },
-            {
-                "suit": "clubs",
-                "name": 2,
-                "value": 2
-            },
-            {
-                "suit": "clubs",
-                "name": 3,
-                "value": 3
-            },
-            {
-                "suit": "clubs",
-                "name": 4,
-                "value": 3
-            },
-            {
-                "suit": "clubs",
-                "name": 5,
-                "value": 5
-            },
-            {
-                "suit": "clubs",
-                "name": 6,
-                "value": 6
-            },
-            {
-                "suit": "clubs",
-                "name": 7,
-                "value": 7
-            },
-            {
-                "suit": "clubs",
-                "name": 8,
-                "value": 8
-            },
-            {
-                "suit": "clubs",
-                "name": 9,
-                "value": 9
-            },
-            {
-                "suit": "clubs",
-                "name": 10,
-                "value": 10
-            },
-            {
-                "suit": "clubs",
-                "name": "J",
-                "value": 11
-            },
-            {
-                "suit": "clubs",
-                "name": "Q",
-                "value": 12
-            },
-            {
-                "suit": "clubs",
-                "name": "K",
-                "value": 13
-            },
-            {
-                "suit": "clubs",
-                "name": "A",
-                "value": 14
-            },
-            {
-                "suit": "spades",
-                "name": 2,
-                "value": 15
-            },
-            {
-                "suit": "spades",
-                "name": 3,
-                "value": 16
-            },
-            {
-                "suit": "spades",
-                "name": 4,
-                "value": 17
-            },
-            {
-                "suit": "spades",
-                "name": 5,
-                "value": 18
-            },
-            {
-                "suit": "spades",
-                "name": 6,
-                "value": 19
-            },
-            {
-                "suit": "spades",
-                "name": 7,
-                "value": 20
-            },
-            {
-                "suit": "spades",
-                "name": 8,
-                "value": 21
-            },
-            {
-                "suit": "spades",
-                "name": 9,
-                "value": 22
-            },
-            {
-                "suit": "spades",
-                "name": 10,
-                "value": 23
-            },
-            {
-                "suit": "spades",
-                "name": "J",
-                "value": 24
-            },
-            {
-                "suit": "spades",
-                "name": "Q",
-                "value": 25
-            },
-            {
-                "suit": "spades",
-                "name": "K",
-                "value": 26
-            },
-            {
-                "suit": "spades",
-                "name": "A",
-                "value": 27
-            },
-            {
-                "suit": "joker",
-                "name": "",
-                "value": 99
-            },
-            {
-                "suit": "joker",
-                "name": "",
-                "value": 98
-            }
-        ]
+      "deckName": "Supers",
+      "cards": [
+        {
+          "suit": "hearts",
+          "name": 2,
+          "value": 4
+        },
+        {
+          "suit": "hearts",
+          "name": 3,
+          "value": 8
+        },
+        {
+          "suit": "hearts",
+          "name": 4,
+          "value": 12
+        },
+        {
+          "suit": "hearts",
+          "name": 5,
+          "value": 16
+        },
+        {
+          "suit": "hearts",
+          "name": 6,
+          "value": 20
+        },
+        {
+          "suit": "hearts",
+          "name": 7,
+          "value": 24
+        },
+        {
+          "suit": "hearts",
+          "name": 8,
+          "value": 28
+        },
+        {
+          "suit": "hearts",
+          "name": 9,
+          "value": 32
+        },
+        {
+          "suit": "hearts",
+          "name": 10,
+          "value": 36
+        },
+        {
+          "suit": "hearts",
+          "name": "J",
+          "value": 40
+        },
+        {
+          "suit": "hearts",
+          "name": "Q",
+          "value": 44
+        },
+        {
+          "suit": "hearts",
+          "name": "K",
+          "value": 48
+        },
+        {
+          "suit": "hearts",
+          "name": "A",
+          "value": 52
+        },
+        {
+          "suit": "diamonds",
+          "name": 2,
+          "value": 5
+        },
+        {
+          "suit": "diamonds",
+          "name": 3,
+          "value": 9
+        },
+        {
+          "suit": "diamonds",
+          "name": 4,
+          "value": 13
+        },
+        {
+          "suit": "diamonds",
+          "name": 5,
+          "value": 17
+        },
+        {
+          "suit": "diamonds",
+          "name": 6,
+          "value": 21
+        },
+        {
+          "suit": "diamonds",
+          "name": 7,
+          "value": 25
+        },
+        {
+          "suit": "diamonds",
+          "name": 8,
+          "value": 29
+        },
+        {
+          "suit": "diamonds",
+          "name": 9,
+          "value": 33
+        },
+        {
+          "suit": "diamonds",
+          "name": 10,
+          "value": 37
+        },
+        {
+          "suit": "diamonds",
+          "name": "J",
+          "value": 41
+        },
+        {
+          "suit": "diamonds",
+          "name": "Q",
+          "value": 45
+        },
+        {
+          "suit": "diamonds",
+          "name": "K",
+          "value": 49
+        },
+        {
+          "suit": "diamonds",
+          "name": "A",
+          "value": 53
+        },
+        {
+          "suit": "clubs",
+          "name": 2,
+          "value": 2
+        },
+        {
+          "suit": "clubs",
+          "name": 3,
+          "value": 6
+        },
+        {
+          "suit": "clubs",
+          "name": 4,
+          "value": 10
+        },
+        {
+          "suit": "clubs",
+          "name": 5,
+          "value": 14
+        },
+        {
+          "suit": "clubs",
+          "name": 6,
+          "value": 18
+        },
+        {
+          "suit": "clubs",
+          "name": 7,
+          "value": 22
+        },
+        {
+          "suit": "clubs",
+          "name": 8,
+          "value": 26
+        },
+        {
+          "suit": "clubs",
+          "name": 9,
+          "value": 30
+        },
+        {
+          "suit": "clubs",
+          "name": 10,
+          "value": 34
+        },
+        {
+          "suit": "clubs",
+          "name": "J",
+          "value": 38
+        },
+        {
+          "suit": "clubs",
+          "name": "Q",
+          "value": 42
+        },
+        {
+          "suit": "clubs",
+          "name": "K",
+          "value": 46
+        },
+        {
+          "suit": "clubs",
+          "name": "A",
+          "value": 50
+        },
+        {
+          "suit": "spades",
+          "name": 2,
+          "value": 3
+        },
+        {
+          "suit": "spades",
+          "name": 3,
+          "value": 7
+        },
+        {
+          "suit": "spades",
+          "name": 4,
+          "value": 11
+        },
+        {
+          "suit": "spades",
+          "name": 5,
+          "value": 15
+        },
+        {
+          "suit": "spades",
+          "name": 6,
+          "value": 19
+        },
+        {
+          "suit": "spades",
+          "name": 7,
+          "value": 23
+        },
+        {
+          "suit": "spades",
+          "name": 8,
+          "value": 27
+        },
+        {
+          "suit": "spades",
+          "name": 9,
+          "value": 31
+        },
+        {
+          "suit": "spades",
+          "name": 10,
+          "value": 35
+        },
+        {
+          "suit": "spades",
+          "name": "J",
+          "value": 39
+        },
+        {
+          "suit": "spades",
+          "name": "Q",
+          "value": 43
+        },
+        {
+          "suit": "spades",
+          "name": "K",
+          "value": 47
+        },
+        {
+          "suit": "spades",
+          "name": "A",
+          "value": 51
+        },
+        {
+          "suit": "joker",
+          "name": "",
+          "value": 99
+        },
+        {
+          "suit": "joker",
+          "name": "",
+          "value": 98
+        }
+      ]
+    },
+    {
+      "deckName": "Chronicles",
+      "cards": [
+        {
+          "suit": "hearts",
+          "name": 2,
+          "value": 28
+        },
+        {
+          "suit": "hearts",
+          "name": 3,
+          "value": 29
+        },
+        {
+          "suit": "hearts",
+          "name": 4,
+          "value": 30
+        },
+        {
+          "suit": "hearts",
+          "name": 5,
+          "value": 31
+        },
+        {
+          "suit": "hearts",
+          "name": 6,
+          "value": 32
+        },
+        {
+          "suit": "hearts",
+          "name": 7,
+          "value": 33
+        },
+        {
+          "suit": "hearts",
+          "name": 8,
+          "value": 34
+        },
+        {
+          "suit": "hearts",
+          "name": 9,
+          "value": 35
+        },
+        {
+          "suit": "hearts",
+          "name": 10,
+          "value": 36
+        },
+        {
+          "suit": "hearts",
+          "name": "J",
+          "value": 37
+        },
+        {
+          "suit": "hearts",
+          "name": "Q",
+          "value": 38
+        },
+        {
+          "suit": "hearts",
+          "name": "K",
+          "value": 39
+        },
+        {
+          "suit": "hearts",
+          "name": "A",
+          "value": 40
+        },
+        {
+          "suit": "diamonds",
+          "name": 2,
+          "value": 41
+        },
+        {
+          "suit": "diamonds",
+          "name": 3,
+          "value": 42
+        },
+        {
+          "suit": "diamonds",
+          "name": 4,
+          "value": 43
+        },
+        {
+          "suit": "diamonds",
+          "name": 5,
+          "value": 44
+        },
+        {
+          "suit": "diamonds",
+          "name": 6,
+          "value": 45
+        },
+        {
+          "suit": "diamonds",
+          "name": 7,
+          "value": 46
+        },
+        {
+          "suit": "diamonds",
+          "name": 8,
+          "value": 47
+        },
+        {
+          "suit": "diamonds",
+          "name": 9,
+          "value": 48
+        },
+        {
+          "suit": "diamonds",
+          "name": 10,
+          "value": 49
+        },
+        {
+          "suit": "diamonds",
+          "name": "J",
+          "value": 50
+        },
+        {
+          "suit": "diamonds",
+          "name": "Q",
+          "value": 51
+        },
+        {
+          "suit": "diamonds",
+          "name": "K",
+          "value": 52
+        },
+        {
+          "suit": "diamonds",
+          "name": "A",
+          "value": 53
+        },
+        {
+          "suit": "clubs",
+          "name": 2,
+          "value": 2
+        },
+        {
+          "suit": "clubs",
+          "name": 3,
+          "value": 3
+        },
+        {
+          "suit": "clubs",
+          "name": 4,
+          "value": 3
+        },
+        {
+          "suit": "clubs",
+          "name": 5,
+          "value": 5
+        },
+        {
+          "suit": "clubs",
+          "name": 6,
+          "value": 6
+        },
+        {
+          "suit": "clubs",
+          "name": 7,
+          "value": 7
+        },
+        {
+          "suit": "clubs",
+          "name": 8,
+          "value": 8
+        },
+        {
+          "suit": "clubs",
+          "name": 9,
+          "value": 9
+        },
+        {
+          "suit": "clubs",
+          "name": 10,
+          "value": 10
+        },
+        {
+          "suit": "clubs",
+          "name": "J",
+          "value": 11
+        },
+        {
+          "suit": "clubs",
+          "name": "Q",
+          "value": 12
+        },
+        {
+          "suit": "clubs",
+          "name": "K",
+          "value": 13
+        },
+        {
+          "suit": "clubs",
+          "name": "A",
+          "value": 14
+        },
+        {
+          "suit": "spades",
+          "name": 2,
+          "value": 15
+        },
+        {
+          "suit": "spades",
+          "name": 3,
+          "value": 16
+        },
+        {
+          "suit": "spades",
+          "name": 4,
+          "value": 17
+        },
+        {
+          "suit": "spades",
+          "name": 5,
+          "value": 18
+        },
+        {
+          "suit": "spades",
+          "name": 6,
+          "value": 19
+        },
+        {
+          "suit": "spades",
+          "name": 7,
+          "value": 20
+        },
+        {
+          "suit": "spades",
+          "name": 8,
+          "value": 21
+        },
+        {
+          "suit": "spades",
+          "name": 9,
+          "value": 22
+        },
+        {
+          "suit": "spades",
+          "name": 10,
+          "value": 23
+        },
+        {
+          "suit": "spades",
+          "name": "J",
+          "value": 24
+        },
+        {
+          "suit": "spades",
+          "name": "Q",
+          "value": 25
+        },
+        {
+          "suit": "spades",
+          "name": "K",
+          "value": 26
+        },
+        {
+          "suit": "spades",
+          "name": "A",
+          "value": 27
+        },
+        {
+          "suit": "joker",
+          "name": "",
+          "value": 99
+        },
+        {
+          "suit": "joker",
+          "name": "",
+          "value": 98
+        }
+      ]
     }
-    ]
+  ]
 }

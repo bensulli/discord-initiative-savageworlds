@@ -356,5 +356,41 @@ namespace DiscordInitiative.Modules
             await ReplyAsync(response + "\r\n" + sb.ToString());
         }
 
+        [Command("edge")]
+        public async Task EdgeCommand()
+        {
+            await ReplyAsync("Please specify the actor's name, the edge and, if appropriate, your skill bonus.");
+        }
+        [Command("edge")]
+        public async Task EdgeCommandWithArguments([Remainder] string args)
+        {
+            var argList = args.Split(" ");
+            string response;
+            string actorName = "";
+
+            if (argList.Length == 1)
+            {
+                actorName = argList[0];
+            }
+            else if (argList.Length == 0)
+            {
+                response = "";
+            }
+            else
+            {
+                actorName = argList[0];
+
+                for (int i = 1; i < argList.Length; i++)
+                {
+                    actorName = actorName + " " + argList[i];
+
+                }
+            }
+            actorName = actorName.Trim();
+            response = ActorList.HoldCard(actorName);
+
+            await ReplyAsync(response);
+        }
+
     }
 }
