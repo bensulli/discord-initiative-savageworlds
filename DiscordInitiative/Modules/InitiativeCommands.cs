@@ -76,6 +76,98 @@ namespace DiscordInitiative.Modules
             await ReplyAsync(actorName + " added to the initiative order.");
         }
 
+        [Command("list")]
+        public async Task ListCommand()
+        {
+            var sb = new StringBuilder();
+
+            foreach (var line in ActorList.GetInitList())
+            {
+                sb.AppendLine(line);
+            }
+
+            await ReplyAsync(sb.ToString());
+
+        }
+
+        [Command("draw")]
+        public async Task DrawCommand()
+        {
+            var sb = new StringBuilder();
+
+            if (ActorList.DrawCardForActor(Context.User.Username))
+            {
+
+            }
+
+
+            foreach (var line in ActorList.GetInitList())
+            {
+                sb.AppendLine(line);
+            }
+
+            await ReplyAsync(sb.ToString());
+
+        }
+
+        [Command("draw")]
+        public async Task DrawCommandWithArgs([Remainder] string args)
+        {
+            var sb = new StringBuilder();
+
+            int actorType = 0;
+            var argList = args.Split(" ");
+            string actorName = Context.User.Username;
+            if (argList.Length == 1)
+            {
+                actorName = argList[0];
+            }
+
+            if (argList.Length == 2)
+            {
+                actorName = argList[0];
+                try
+                {
+                    actorType = Convert.ToInt16(argList[1]);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    await ReplyAsync(
+                        "Couldn't understand that allegiance value. Use 0 for PC, 1 for Allied NPC, 2 for Enemy NPC");
+                    throw;
+                }
+
+            }
+
+            if (argList.Length > 2)
+            {
+                actorName = "";
+                for (int i = 0; i < argList.Length - 1; i++)
+                {
+                    actorName += argList[i] + " ";
+
+                }
+
+                try
+                {
+                    actorType = Convert.ToInt16(argList[^1]);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    await ReplyAsync(
+                        "Couldn't understand that allegiance value. Use 0 for PC, 1 for Allied NPC, 2 for Enemy NPC");
+                    throw;
+                }
+            }
+            actorName = actorName.Trim();
+            ActorList.Add(actorName, actorType);
+
+            // send simple string reply
+            await ReplyAsync(actorName + " added to the initiative order.");
+        }
+
         [Command("initHidden")]
         public async Task InitHiddenCommand()
         {
@@ -300,7 +392,7 @@ namespace DiscordInitiative.Modules
         [Command("set")]
         public async Task SetCommand()
         {
-            await ReplyAsync("Please specify a command, actor and value. For instance !set Sullitude init 99.");
+            await ReplyAsync("Please specify a command, actor and value. For instance !set Sullitude init 99. Valid commands are 'allegiance', 'visibility', and 'init'.");
         }
 
         [Command("set")]
@@ -341,9 +433,16 @@ namespace DiscordInitiative.Modules
                     {
                         response = ActorList.SetActorInit(actorName, value);
                     }
-                    else if (command == "allegiance")
+                    else if (command == "allegiance" || command == "Allegiance")
                     {
                         response = ActorList.SetActorAllegiance(actorName, value);
+                    }
+                    else if (command == "visibility" || command == "Visibility")
+                    {
+                        if (value == 1)
+                            ActorList.SetActorVisibility(actorName, true);
+                        else if (value == 0)
+                            ActorList.SetActorVisibility(actorName, false);
                     }
                 }
             }

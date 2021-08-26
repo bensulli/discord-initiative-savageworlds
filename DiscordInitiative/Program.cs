@@ -197,7 +197,7 @@ namespace DiscordInitiative
             return orderString;
         }
 
-        public void DealCard()
+        public void DrawCard()
         {
             Card newCard = Program.Deck.Draw();
             if (newCard.CardName == "")
@@ -387,7 +387,7 @@ namespace DiscordInitiative
             {
                 actor.ValueOverride = -1;
                     if(!actor.HoldCard && actor.HealthStatus != 0 && actor.Status != 0)
-                    actor.DealCard();
+                    actor.DrawCard();
                 Program.Deck.RemoveHolds();
             }
         }
@@ -429,6 +429,41 @@ namespace DiscordInitiative
 
             return actorName + " has been given an allegiance of " + value + ".";
         }
+
+        public static string SetActorVisibility(string actorName, bool visible)
+        {
+
+            bool foundActor = false;
+            foreach (var actor in initList)
+            {
+                if (actor.Name == actorName)
+                {
+                    actor.Hidden = visible;
+                    foundActor = true;
+                }
+            }
+
+            if (!foundActor)
+                return "Couldn't find actor " + actorName + ". Please check spelling.";
+
+            return actorName + " has their visibility updated.";
+        }
+
+        public static bool DrawCardForActor(string actorName)
+        {
+            foreach (var actor in initList)
+            {
+                if (actor.Name == actorName)
+                {
+                    actor.DrawCard();
+                    return true;
+                }
+            }
+
+            return false;
+
+        }
+
     }
 }
 
