@@ -21,9 +21,7 @@ namespace DiscordInitiative.Modules
         [Command("init")]
         public async Task InitCommandWithArgs([Remainder] string args)
         {
-            var sb = new StringBuilder();
-
-            int actorType = 0;
+            int actorAllegiance = 0;
             var argList = args.Split(" ");
             string actorName = Context.User.Username;
             if (argList.Length == 1)
@@ -36,7 +34,7 @@ namespace DiscordInitiative.Modules
                 actorName = argList[0];
                 try
                 {
-                    actorType = Convert.ToInt16(argList[1]);
+                    actorAllegiance = Convert.ToInt16(argList[1]);
                 }
                 catch (Exception e)
                 {
@@ -59,7 +57,7 @@ namespace DiscordInitiative.Modules
 
                 try
                 {
-                    actorType = Convert.ToInt16(argList[^1]);
+                    actorAllegiance = Convert.ToInt16(argList[^1]);
                 }
                 catch (Exception e)
                 {
@@ -70,10 +68,90 @@ namespace DiscordInitiative.Modules
                 }
             }
             actorName = actorName.Trim();
-            ActorList.Add(actorName, actorType);
+            ActorList.Add(actorName, actorAllegiance);
 
             // send simple string reply
             await ReplyAsync(actorName + " added to the initiative order.");
+        }
+
+        [Command("list")]
+        public async Task ListCommand()
+        {
+            var sb = new StringBuilder();
+
+            foreach (var line in ActorList.GetInitList())
+            {
+                sb.AppendLine(line);
+            }
+
+            await ReplyAsync(sb.ToString());
+
+        }
+
+        [Command("draw")]
+        public async Task DrawCommand()
+        {
+            var sb = new StringBuilder();
+
+            if (ActorList.DrawCardForActor(Context.User.Username))
+            {
+                foreach (var line in ActorList.GetInitList())
+                {
+                    sb.AppendLine(line);
+                }
+
+                await ReplyAsync(sb.ToString());
+            }
+            else
+            {
+                await ReplyAsync("Failed to draw a card for " + Context.User.Username +
+                                 ". Are they active in the initiative list?");
+            }
+
+        }
+
+        [Command("draw")]
+        public async Task DrawCommandWithArgs([Remainder] string args)
+        {
+            var sb = new StringBuilder();
+
+            var argList = args.Split(" ");
+            string actorName = Context.User.Username;
+            if (argList.Length == 1)
+            {
+                actorName = argList[0];
+            }
+
+            if (argList.Length == 2)
+            {
+                actorName = argList[0];
+            }
+
+            if (argList.Length > 2)
+            {
+                actorName = "";
+                for (int i = 0; i < argList.Length - 1; i++)
+                {
+                    actorName += argList[i] + " ";
+
+                }
+            }
+            actorName = actorName.Trim();
+
+            if (ActorList.DrawCardForActor(actorName))
+            {
+                foreach (var line in ActorList.GetInitList())
+                {
+                    sb.AppendLine(line);
+                }
+
+                await ReplyAsync(sb.ToString());
+            }
+            else
+            {
+                await ReplyAsync("Failed to draw a card for " + actorName +
+                                 ". Are they active in the initiative list?");
+            }
         }
 
         [Command("initHidden")]
@@ -153,6 +231,7 @@ namespace DiscordInitiative.Modules
                 sb.AppendLine(line);
             }
 
+            Program.RoundCount++;
             await ReplyAsync(sb.ToString());
         }
 
@@ -167,15 +246,11 @@ namespace DiscordInitiative.Modules
         {
             var argList = args.Split(" ");
             string response;
-            string actorName = "";
+            string actorName;
 
             if (argList.Length == 1)
             {
                 actorName = argList[0];
-            }
-            else if (argList.Length == 0)
-            {
-                response = "";
             }
             else
             {
@@ -212,7 +287,7 @@ namespace DiscordInitiative.Modules
             }
             else if (argList.Length == 0)
             {
-                response = "Please specify an actor to remove from initiative.";
+                await ReplyAsync("Please specify an actor to remove from initiative.");
             }
             else
             {
@@ -249,7 +324,7 @@ namespace DiscordInitiative.Modules
             }
             else if (argList.Length == 0)
             {
-                response = "Please specify an actor to kill.";
+                await ReplyAsync("Please specify an actor to kill.");
             }
             else
             {
@@ -280,7 +355,7 @@ namespace DiscordInitiative.Modules
             }
             else if (argList.Length == 0)
             {
-                response = "Please specify an actor to show.";
+                await ReplyAsync("Please specify an actor to show.");
             }
             else
             {
@@ -300,7 +375,7 @@ namespace DiscordInitiative.Modules
         [Command("set")]
         public async Task SetCommand()
         {
-            await ReplyAsync("Please specify a command, actor and value. For instance !set Sullitude init 99.");
+            await ReplyAsync("Please specify a command, actor and value. For instance !set Sullitude init 99. Valid commands are 'allegiance', 'hidden', and 'init'.");
         }
 
         [Command("set")]
@@ -319,7 +394,7 @@ namespace DiscordInitiative.Modules
             }
             else
             {
-                if (argList[^2] != "init" && argList[^2] != "allegiance")
+                if (argList[^2] != "init" && argList[^2] != "allegiance" && argList[^2] != "hidden" && argList[^2] != "Allegiance" && argList[^2] != "Hidden")
                 {
                     response = "Please specify a command, actor and value. For instance !set Sullitude init 99 or !set Sullitude allegiance 0.";
                 }
@@ -341,9 +416,16 @@ namespace DiscordInitiative.Modules
                     {
                         response = ActorList.SetActorInit(actorName, value);
                     }
-                    else if (command == "allegiance")
+                    else if (command == "allegiance" || command == "Allegiance")
                     {
                         response = ActorList.SetActorAllegiance(actorName, value);
+                    }
+                    else if (command == "hidden" || command == "Hidden")
+                    {
+                        if (value == 1)
+                            ActorList.SetActorVisibility(actorName, true);
+                        else if (value == 0)
+                            ActorList.SetActorVisibility(actorName, false);
                     }
                 }
             }
@@ -353,7 +435,15 @@ namespace DiscordInitiative.Modules
                 sb.AppendLine(line);
             }
 
-            await ReplyAsync(response + "\r\n" + sb.ToString());
+            await ReplyAsync(response + "\r\n" + sb);
+        }
+
+        [Command("end")]
+        public async Task EndCommand()
+        {
+            ActorList.EndCombat();
+            Program.RoundCount = 0;
+            await ReplyAsync("Combat has resolved. I hope some of you are still alive.");
         }
 
     }

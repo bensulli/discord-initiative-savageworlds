@@ -187,7 +187,7 @@ namespace DiscordInitiative
                 card = Card.CardName;
             }
 
-            string orderString = Program.GlobalConfigStruct._lineFormat
+            string orderString = Program.GlobalConfigStruct.LineFormat
                 .Replace("[SUIT]", emoji)
                 .Replace("[CARD]", card)
                 .Replace("[CharacterName]", Name)
@@ -197,7 +197,7 @@ namespace DiscordInitiative
             return orderString;
         }
 
-        public void DealCard()
+        public void DrawCard()
         {
             Card newCard = Program.Deck.Draw();
             if (newCard.CardName == "")
@@ -363,7 +363,7 @@ namespace DiscordInitiative
             {
                 initListString.Add("There are no actors in the initiative order. Use !init to add them.");
             }
-
+            initListString.Add("Round #" + Program.RoundCount);
             RemoveActorHolds();
             return initListString;
         }
@@ -387,7 +387,7 @@ namespace DiscordInitiative
             {
                 actor.ValueOverride = -1;
                     if(!actor.HoldCard && actor.HealthStatus != 0 && actor.Status != 0)
-                    actor.DealCard();
+                    actor.DrawCard();
                 Program.Deck.RemoveHolds();
             }
         }
@@ -429,6 +429,45 @@ namespace DiscordInitiative
 
             return actorName + " has been given an allegiance of " + value + ".";
         }
+
+        public static string SetActorVisibility(string actorName, bool hidden)
+        {
+
+            bool foundActor = false;
+            foreach (var actor in initList)
+            {
+                if (actor.Name == actorName)
+                {
+                    actor.Hidden = hidden;
+                    foundActor = true;
+                }
+            }
+
+            if (!foundActor)
+                return "Couldn't find actor " + actorName + ". Please check spelling.";
+
+            return actorName + " has their visibility updated.";
+        }
+
+        public static bool DrawCardForActor(string actorName)
+        {
+            foreach (var actor in initList)
+            {
+                if (actor.Name == actorName)
+                {
+                    actor.DrawCard();
+                    return true;
+                }
+            }
+
+            return false;
+
+        }
+
+        public static void EndCombat()
+        {
+            initList.Clear();
+        }
     }
 }
 
@@ -436,13 +475,13 @@ public class Program
     {
         public static Deck Deck;
         public static ActorList ActorList;
+        public static int RoundCount = 0;
 
-        private DiscordSocketClient _client;
         public struct GlobalConfigStruct
         {
-            public static string _botToken = "";
-            public static string _variantDeck = "";
-            public static string _lineFormat = "> [SUIT] [CARD] ([VALUE]) - **[CharacterName]** - _[AlliedStatus]_";
+            public static string BotToken = "";
+            public static string VariantDeck = "";
+            public static string LineFormat = "> [SUIT] [CARD] ([VALUE]) - **[CharacterName]** - _[AlliedStatus]_";
         }
 
         public static void SetArgs(string[] args)
@@ -453,11 +492,11 @@ public class Program
                 {
                     if (arg.Contains("--token="))
                     {
-                        GlobalConfigStruct._botToken = arg.Split("=")[1];
+                        GlobalConfigStruct.BotToken = arg.Split("=")[1];
                     }
                     if (arg.Contains("--deck="))
                     {
-                        GlobalConfigStruct._variantDeck = arg.Split("=")[1];
+                        GlobalConfigStruct.VariantDeck = arg.Split("=")[1];
                     }
                 }
             }
@@ -469,7 +508,7 @@ public class Program
 		public async Task MainAsync(string[] args)
 		{
 			SetArgs(args);
-            Deck = new Deck(GlobalConfigStruct._variantDeck);
+            Deck = new Deck(GlobalConfigStruct.VariantDeck);
             ActorList = new ActorList();
 
             using (var services = ConfigureServices())
@@ -477,9 +516,8 @@ public class Program
                 if (Deck.DeckExists)
                 {
                     var client = services.GetRequiredService<DiscordSocketClient>();
-                _client = client;
                     client.Log += Log;
-                client.LoginAsync(TokenType.Bot, GlobalConfigStruct._botToken);
+                client.LoginAsync(TokenType.Bot, GlobalConfigStruct.BotToken);
                 client.StartAsync();
                 await services.GetRequiredService<CommandHandler>().InitializeAsync();
                 await Task.Delay(-1);
