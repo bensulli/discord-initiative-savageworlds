@@ -430,7 +430,7 @@ namespace DiscordInitiative
             return actorName + " has been given an allegiance of " + value + ".";
         }
 
-        public static string SetActorVisibility(string actorName, bool visible)
+        public static string SetActorVisibility(string actorName, bool hidden)
         {
 
             bool foundActor = false;
@@ -438,7 +438,7 @@ namespace DiscordInitiative
             {
                 if (actor.Name == actorName)
                 {
-                    actor.Hidden = visible;
+                    actor.Hidden = hidden;
                     foundActor = true;
                 }
             }
