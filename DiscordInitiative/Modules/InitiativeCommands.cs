@@ -21,8 +21,6 @@ namespace DiscordInitiative.Modules
         [Command("init")]
         public async Task InitCommandWithArgs([Remainder] string args)
         {
-            var sb = new StringBuilder();
-
             int actorAllegiance = 0;
             var argList = args.Split(" ");
             string actorName = Context.User.Username;
@@ -94,7 +92,6 @@ namespace DiscordInitiative.Modules
         public async Task DrawCommand()
         {
             var sb = new StringBuilder();
-            bool success;
 
             if (ActorList.DrawCardForActor(Context.User.Username))
             {
@@ -118,7 +115,6 @@ namespace DiscordInitiative.Modules
         {
             var sb = new StringBuilder();
 
-            int actorAllegiance = 0;
             var argList = args.Split(" ");
             string actorName = Context.User.Username;
             if (argList.Length == 1)
@@ -235,6 +231,7 @@ namespace DiscordInitiative.Modules
                 sb.AppendLine(line);
             }
 
+            Program.RoundCount++;
             await ReplyAsync(sb.ToString());
         }
 
@@ -249,15 +246,11 @@ namespace DiscordInitiative.Modules
         {
             var argList = args.Split(" ");
             string response;
-            string actorName = "";
+            string actorName;
 
             if (argList.Length == 1)
             {
                 actorName = argList[0];
-            }
-            else if (argList.Length == 0)
-            {
-                response = "";
             }
             else
             {
@@ -294,7 +287,7 @@ namespace DiscordInitiative.Modules
             }
             else if (argList.Length == 0)
             {
-                response = "Please specify an actor to remove from initiative.";
+                await ReplyAsync("Please specify an actor to remove from initiative.");
             }
             else
             {
@@ -331,7 +324,7 @@ namespace DiscordInitiative.Modules
             }
             else if (argList.Length == 0)
             {
-                response = "Please specify an actor to kill.";
+                await ReplyAsync("Please specify an actor to kill.");
             }
             else
             {
@@ -362,7 +355,7 @@ namespace DiscordInitiative.Modules
             }
             else if (argList.Length == 0)
             {
-                response = "Please specify an actor to show.";
+                await ReplyAsync("Please specify an actor to show.");
             }
             else
             {
@@ -442,14 +435,16 @@ namespace DiscordInitiative.Modules
                 sb.AppendLine(line);
             }
 
-            await ReplyAsync(response + "\r\n" + sb.ToString());
+            await ReplyAsync(response + "\r\n" + sb);
         }
 
         [Command("end")]
         public async Task EndCommand()
         {
             ActorList.EndCombat();
+            Program.RoundCount = 0;
             await ReplyAsync("Combat has resolved. I hope some of you are still alive.");
         }
+
     }
 }

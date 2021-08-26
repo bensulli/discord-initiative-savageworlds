@@ -187,7 +187,7 @@ namespace DiscordInitiative
                 card = Card.CardName;
             }
 
-            string orderString = Program.GlobalConfigStruct._lineFormat
+            string orderString = Program.GlobalConfigStruct.LineFormat
                 .Replace("[SUIT]", emoji)
                 .Replace("[CARD]", card)
                 .Replace("[CharacterName]", Name)
@@ -363,7 +363,7 @@ namespace DiscordInitiative
             {
                 initListString.Add("There are no actors in the initiative order. Use !init to add them.");
             }
-
+            initListString.Add("Round #" + Program.RoundCount);
             RemoveActorHolds();
             return initListString;
         }
@@ -464,7 +464,7 @@ namespace DiscordInitiative
 
         }
 
-        public static void EndRound()
+        public static void EndCombat()
         {
             initList.Clear();
         }
@@ -475,13 +475,13 @@ public class Program
     {
         public static Deck Deck;
         public static ActorList ActorList;
+        public static int RoundCount = 0;
 
-        private DiscordSocketClient _client;
         public struct GlobalConfigStruct
         {
-            public static string _botToken = "";
-            public static string _variantDeck = "";
-            public static string _lineFormat = "> [SUIT] [CARD] ([VALUE]) - **[CharacterName]** - _[AlliedStatus]_";
+            public static string BotToken = "";
+            public static string VariantDeck = "";
+            public static string LineFormat = "> [SUIT] [CARD] ([VALUE]) - **[CharacterName]** - _[AlliedStatus]_";
         }
 
         public static void SetArgs(string[] args)
@@ -492,11 +492,11 @@ public class Program
                 {
                     if (arg.Contains("--token="))
                     {
-                        GlobalConfigStruct._botToken = arg.Split("=")[1];
+                        GlobalConfigStruct.BotToken = arg.Split("=")[1];
                     }
                     if (arg.Contains("--deck="))
                     {
-                        GlobalConfigStruct._variantDeck = arg.Split("=")[1];
+                        GlobalConfigStruct.VariantDeck = arg.Split("=")[1];
                     }
                 }
             }
@@ -508,7 +508,7 @@ public class Program
 		public async Task MainAsync(string[] args)
 		{
 			SetArgs(args);
-            Deck = new Deck(GlobalConfigStruct._variantDeck);
+            Deck = new Deck(GlobalConfigStruct.VariantDeck);
             ActorList = new ActorList();
 
             using (var services = ConfigureServices())
@@ -516,9 +516,8 @@ public class Program
                 if (Deck.DeckExists)
                 {
                     var client = services.GetRequiredService<DiscordSocketClient>();
-                _client = client;
                     client.Log += Log;
-                client.LoginAsync(TokenType.Bot, GlobalConfigStruct._botToken);
+                client.LoginAsync(TokenType.Bot, GlobalConfigStruct.BotToken);
                 client.StartAsync();
                 await services.GetRequiredService<CommandHandler>().InitializeAsync();
                 await Task.Delay(-1);
