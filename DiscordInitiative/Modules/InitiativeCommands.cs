@@ -448,8 +448,8 @@ namespace DiscordInitiative.Modules
         [Command("end")]
         public async Task EndCommand()
         {
-            
-
+            ActorList.EndCombat();
+            await ReplyAsync("Combat has resolved. I hope some of you are still alive.");
         }
     }
 }

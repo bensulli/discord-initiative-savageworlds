@@ -464,6 +464,10 @@ namespace DiscordInitiative
 
         }
 
+        public static void EndRound()
+        {
+            initList.Clear();
+        }
     }
 }
 
