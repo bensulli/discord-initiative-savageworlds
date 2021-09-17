@@ -442,7 +442,7 @@ namespace DiscordInitiative.Modules
         public async Task EndCommand()
         {
             ActorList.EndCombat();
-            Program.RoundCount = 0;
+            Program.RoundCount = 1;
             await ReplyAsync("Combat has resolved. I hope some of you are still alive.");
         }
 

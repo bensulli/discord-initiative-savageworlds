@@ -475,7 +475,7 @@ public class Program
     {
         public static Deck Deck;
         public static ActorList ActorList;
-        public static int RoundCount = 0;
+        public static int RoundCount = 1;
 
         public struct GlobalConfigStruct
         {
