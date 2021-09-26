@@ -43,7 +43,7 @@ namespace DiscordInitiative.Modules
                 actorName = argList[0];
             }
 
-            if (argList.Length > 1)
+            if (argList.Length >= 1)
             {
                 actorName = "";
                 if (int.TryParse(argList.Last(), out actorAllegiance))
