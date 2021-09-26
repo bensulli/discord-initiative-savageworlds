@@ -1,0 +1,8 @@
+version: "3"
+services:
+  discord-initiative-savageworlds:
+    build:
+      context: .
+    environment:
+      TOKEN: <discord-bot-token>
+      DECK: <chosen-deck-name>
