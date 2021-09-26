@@ -9,4 +9,5 @@ RUN apt-get update; apt-get install -y apt-transport-https && apt-get update && 
 COPY . .
 RUN dotnet publish
 RUN cd DiscordInitiative/bin/Debug/net5.0/publish
-CMD ./DiscordInitiative --token="$TOKEN" --deck="$DECK"
+RUN echo "${TOKEN}"
+CMD ./DiscordInitiative --token="${TOKEN}" --deck="${DECK}"
