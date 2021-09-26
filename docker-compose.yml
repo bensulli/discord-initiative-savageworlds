@@ -3,6 +3,6 @@ services:
   discord-initiative-savageworlds:
     build:
       context: .
-    environment:
-      TOKEN: <discord-bot-token>
-      DECK: <chosen-deck-name>
+      args:
+        token: <discord-bot-token>
+        deck: <chosen-deck>
