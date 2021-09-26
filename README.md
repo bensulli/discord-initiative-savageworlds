@@ -15,7 +15,7 @@ This bot now treats each server and channel as a separate instance. This allows 
 3. End combat with !end
 
 # Commands List
-
+Note: If not specified, the bot will assume commands are intended for the actor the calling user last added to the initiative (not the last actor you used !set, !draw, or other commands on)
  - `!init` - Add a new actor to the initiative list
 	 - By default, this adds a new actor with the user's Discord username and allegiance of "PC"
 	 - Accepts custom name and allegiance parameters, eg `!init A Heroic Knight 0`

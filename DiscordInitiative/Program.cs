@@ -245,6 +245,36 @@ namespace DiscordInitiative
         public int RoundCount = 0;
         public string InstanceId;
 
+        public static List<User> UserList = new List<User>();
+
+        public void UserUpdate(string userName, string actorName)
+        {
+            foreach (var user in UserList)
+            {
+                if (user.Username == userName)
+                {
+                    user.LastActor = actorName;
+                    return;
+                }
+            }
+            UserList.Add(new User(userName));
+            UserUpdate(userName,actorName);
+            
+        }
+
+        public string GetSavedActorName(string userName)
+        {
+            foreach (var user in UserList)
+            {
+                if (user.Username == userName)
+                {
+                    return user.LastActor;
+                }
+            }
+
+            return null;
+        }
+
         public BotInstance(string instanceId)
         {
             this.InstanceId = instanceId;
@@ -485,6 +515,17 @@ namespace DiscordInitiative
 
     }
 
+    public class User
+    {
+        public User(string userName)
+        {
+            Username = userName;
+        }
+        public string LastActor { get; set; }
+        public string Username { get; set; }
+
+
+    }
 }
 
 
@@ -564,6 +605,8 @@ public class Program
         }
         return null;
     }
+
+
 
     private ServiceProvider ConfigureServices()
     {

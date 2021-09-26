@@ -1,5 +1,7 @@
 ﻿using Discord.Commands;
 using System;
+using System.ComponentModel.Design;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +14,16 @@ namespace DiscordInitiative.Modules
         {
             BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
             string actorName = Context.User.Username;
-
+            if (instance.GetSavedActorName(Context.User.Username) != null)
+            {
+                actorName = instance.GetSavedActorName(Context.User.Username);
+            }
+            else
+            {
+                instance.UserUpdate(Context.User.Username, Context.User.Username);
+            }
+            
+            
             instance.AddActor(actorName,0);
 
             // Acknowledge
@@ -24,6 +35,7 @@ namespace DiscordInitiative.Modules
         {
             BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
             int actorAllegiance = 0;
+            bool success = false;
             var argList = args.Split(" ");
             string actorName = Context.User.Username;
             if (argList.Length == 1)
@@ -31,49 +43,48 @@ namespace DiscordInitiative.Modules
                 actorName = argList[0];
             }
 
-            if (argList.Length == 2)
-            {
-                actorName = argList[0];
-                try
-                {
-                    actorAllegiance = Convert.ToInt16(argList[1]);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    await ReplyAsync(
-                        "Couldn't understand that allegiance value. Use 0 for PC, 1 for Allied NPC, 2 for Enemy NPC");
-                    throw;
-                }
-
-            }
-
-            if (argList.Length > 2)
+            if (argList.Length > 1)
             {
                 actorName = "";
-                for (int i = 0; i < argList.Length - 1; i++)
+                if (int.TryParse(argList.Last(), out actorAllegiance))
                 {
-                    actorName += argList[i] + " ";
+                    actorAllegiance = Convert.ToInt16(argList.Last());
+                    if(actorAllegiance <= 2)
+                    {
+                        for (int i = 0; i < argList.Length - 1; i++)
+                        {
+                            actorName += argList[i] + " ";
+                        }
 
+                        success = true;
+                    }
+                    else
+                    {
+                        await ReplyAsync(
+                            "Couldn't understand that allegiance value. Use 0 for PC, 1 for Allied NPC, 2 for Enemy NPC");
+                        success = false;
+                    }
                 }
-
-                try
+                else
                 {
-                    actorAllegiance = Convert.ToInt16(argList[^1]);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    await ReplyAsync(
-                        "Couldn't understand that allegiance value. Use 0 for PC, 1 for Allied NPC, 2 for Enemy NPC");
-                    throw;
+                    for (int i = 0; i < argList.Length; i++)
+                    {
+                        actorName += argList[i] + " ";
+                    }
+                    success = true;
                 }
             }
-            actorName = actorName.Trim();
-            instance.AddActor(actorName, actorAllegiance);
 
-            // send simple string reply
-            await ReplyAsync(actorName + " added to the initiative order.");
+            if (success)
+            {
+                actorName = actorName.Trim();
+                instance.UserUpdate(Context.User.Username, actorName);
+                instance.AddActor(actorName, actorAllegiance);
+
+                // send simple string reply
+                await ReplyAsync(actorName + " added to the initiative order.");
+            }
+
         }
 
         [Command("list")]
@@ -81,13 +92,42 @@ namespace DiscordInitiative.Modules
         {
             BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
             var sb = new StringBuilder();
-
-            foreach (var line in instance.GetInitList())
+            int actorsWithDrawnCards = 0;
+            int actorsWithoutDrawnCards = 0;
+            foreach (var actor in instance.ActorList)
             {
-                sb.AppendLine(line);
+                if (actor.Card != null)
+                    actorsWithDrawnCards++;
+                else
+                {
+                    actorsWithoutDrawnCards++;
+                }
             }
 
-            await ReplyAsync(sb.ToString());
+            if (instance.RoundCount == 0)
+            {
+                await ReplyAsync("Combat has not started so no cards have been drawn yet. Use !round to start the first round of combat.");
+            }
+
+            if (actorsWithDrawnCards == 0)
+            {
+                await ReplyAsync("No actors have drawn cards yet. Use !init to add them and !round to start a round and draw cards.");
+            }
+            else
+            {
+                foreach (var line in instance.GetInitList())
+                {
+                    sb.AppendLine(line);
+                }
+
+                if (actorsWithoutDrawnCards > 0)
+                {
+                    sb.AppendLine(actorsWithoutDrawnCards.ToString() +
+                                  " actors were added but won't draw cards until the next !round.");
+                }
+
+                await ReplyAsync(sb.ToString());
+            }
 
         }
 
@@ -96,8 +136,16 @@ namespace DiscordInitiative.Modules
         {
             BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
             var sb = new StringBuilder();
-
-            if (instance.DrawCardForActor(Context.User.Username))
+            string actorName;
+            if (instance.GetSavedActorName(Context.User.Username) != null)
+            {
+                actorName = instance.GetSavedActorName(Context.User.Username);
+            }
+            else
+            {
+                actorName = Context.User.Username;
+            }
+            if (instance.DrawCardForActor(actorName))
             {
                 foreach (var line in instance.GetInitList())
                 {
@@ -108,7 +156,7 @@ namespace DiscordInitiative.Modules
             }
             else
             {
-                await ReplyAsync("Failed to draw a card for " + Context.User.Username +
+                await ReplyAsync("Failed to draw a card for " + actorName +
                                  ". Are they active in the initiative list?");
             }
 
@@ -246,13 +294,27 @@ namespace DiscordInitiative.Modules
         [Command("hold")]
         public async Task HoldCommand()
         {
-            await ReplyAsync("Please specify an actor to hold their card for next round.");
+            BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
+            string actorName;
+            string response;
+            if (instance.GetSavedActorName(Context.User.Username) != null)
+            {
+                actorName = instance.GetSavedActorName(Context.User.Username);
+            }
+            else
+            {
+                actorName = Context.User.Username;
+            }
+            response = instance.HoldCard(actorName);
+
+            await ReplyAsync(response);
         }
 
         [Command("hold")]
         public async Task HoldCommandWithArguments([Remainder] string args)
         {
             BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
+
             var argList = args.Split(" ");
             string response;
             string actorName;
@@ -280,7 +342,20 @@ namespace DiscordInitiative.Modules
         [Command("remove")]
         public async Task RemoveCommand()
         {
-            await ReplyAsync("Please specify an actor to remove from initiative.");
+            BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
+            string actorName;
+            string response;
+            if (instance.GetSavedActorName(Context.User.Username) != null)
+            {
+                actorName = instance.GetSavedActorName(Context.User.Username);
+            }
+            else
+            {
+                actorName = Context.User.Username;
+            }
+            response = instance.RemoveActor(actorName);
+
+            await ReplyAsync(response);
         }
 
         [Command("remove")]
@@ -319,7 +394,19 @@ namespace DiscordInitiative.Modules
         public async Task KillCommand()
         {
             BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
-            await ReplyAsync("Please specify an actor to kill.");
+            string actorName;
+            string response;
+            if (instance.GetSavedActorName(Context.User.Username) != null)
+            {
+                actorName = instance.GetSavedActorName(Context.User.Username);
+            }
+            else
+            {
+                actorName = Context.User.Username;
+            }
+            response = instance.KillActor(actorName);
+
+            await ReplyAsync(response);
         }
 
         [Command("kill")]
