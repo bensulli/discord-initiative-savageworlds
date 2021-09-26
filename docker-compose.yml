@@ -4,5 +4,5 @@ services:
     build:
       context: .
       args:
-        TOKEN: "discord-bot-token"
-        DECK: "chosen-deck"
+        - TOKEN="discord-bot-token"
+        - DECK="chosen-deck"
