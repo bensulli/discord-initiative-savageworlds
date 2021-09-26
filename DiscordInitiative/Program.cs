@@ -12,6 +12,7 @@ using DiscordInitiative;
 using Newtonsoft.Json.Linq;
 using DiscordInitiative.Services;
 using Microsoft.Extensions.DependencyInjection;
+using static Program;
 
 namespace DiscordInitiative
 {
@@ -76,7 +77,7 @@ namespace DiscordInitiative
 
         public void Shuffle()
         {
-            foreach (var card in Program.Deck.Cards)
+            foreach (var card in Cards)
             {
                 if (!card.Held)
                     card.Drawn = false;
@@ -89,7 +90,7 @@ namespace DiscordInitiative
 
         public void RemoveHolds()
         {
-            foreach (var card in Program.Deck.Cards)
+            foreach (var card in Cards)
             {
                 card.Held = false;
             }
@@ -97,7 +98,7 @@ namespace DiscordInitiative
 
         public void MarkCardAsHeld(Card actorCard)
         {
-            foreach (var card in Program.Deck.Cards)
+            foreach (var card in Cards)
             {
                 if (card == actorCard)
                     card.Held = true;
@@ -197,16 +198,7 @@ namespace DiscordInitiative
             return orderString;
         }
 
-        public void DrawCard()
-        {
-            Card newCard = Program.Deck.Draw();
-            if (newCard.CardName == "")
-            {
-                Program.Deck.JokerHit = true;
-            }
 
-            Card = newCard;
-        }
 
         public int GetInitValue()
         {
@@ -246,31 +238,67 @@ namespace DiscordInitiative
         }
     }
 
-    public class ActorList
+    public class BotInstance
     {
-        private static readonly List<Actor> initList = new List<Actor>();
+        public Deck Deck;
+        public List<Actor> ActorList;
+        public int RoundCount = 0;
+        public string InstanceId;
 
-        public static void Add(string actorName, int alliedStatus)
+        public BotInstance(string instanceId)
+        {
+            this.InstanceId = instanceId;
+            Deck = new Deck(GlobalConfigStruct.VariantDeck);
+            ActorList = new List<Actor>();
+        }
+
+        public void DrawCard(Actor actor)
+        {
+            Card newCard = Deck.Draw();
+            if (newCard.CardName == "")
+            {
+                Deck.JokerHit = true;
+            }
+
+            actor.Card = newCard;
+        }
+
+        public bool DrawCardForActor(string actorName)
+        {
+            foreach (var actor in ActorList)
+            {
+                if (actor.Name == actorName)
+                {
+                    DrawCard(actor);
+                    return true;
+                }
+            }
+
+            return false;
+
+        }
+
+        public void AddActor(string actorName, int alliedStatus)
         {
             Actor newActor = new Actor(actorName, alliedStatus, false);
-            initList.Add(newActor);
+            ActorList.Add(newActor);
         }
-        public static void Add(string actorName, int alliedStatus, bool hidden)
+        public void AddActor(string actorName, int alliedStatus, bool hidden)
         {
             Actor newActor = new Actor(actorName, alliedStatus, hidden);
-            initList.Add(newActor);
+            ActorList.Add(newActor);
         }
 
-        public static string HoldCard(string actorName)
+        public string HoldCard(string actorName)
         {
 
             bool foundActor = false;
-            foreach (var actor in initList)
+            foreach (var actor in ActorList)
             {
                 if (actor.Name == actorName)
                 {
                     actor.HoldCard = true;
-                    Program.Deck.MarkCardAsHeld(actor.Card);
+                    Deck.MarkCardAsHeld(actor.Card);
                     foundActor = true;
                 }
             }
@@ -280,11 +308,11 @@ namespace DiscordInitiative
 
             return actorName + " is holding their card for next round.";
         }
-        public static string RemoveActor(string actorName)
+        public string RemoveActor(string actorName)
         {
 
             bool foundActor = false;
-            foreach (var actor in initList)
+            foreach (var actor in ActorList)
             {
                 if (actor.Name == actorName)
                 {
@@ -298,11 +326,11 @@ namespace DiscordInitiative
 
             return actorName + " has been removed from initiative.";
         }
-        public static string KillActor(string actorName)
+        public string KillActor(string actorName)
         {
 
             bool foundActor = false;
-            foreach (var actor in initList)
+            foreach (var actor in ActorList)
             {
                 if (actor.Name == actorName)
                 {
@@ -318,11 +346,11 @@ namespace DiscordInitiative
             return actorName + " has been marked as killed.";
         }
 
-        public static string ShowActor(string actorName)
+        public string ShowActor(string actorName)
         {
 
             bool foundActor = false;
-            foreach (var actor in initList)
+            foreach (var actor in ActorList)
             {
                 if (actor.Name == actorName)
                 {
@@ -337,66 +365,35 @@ namespace DiscordInitiative
             return actorName + " has appeared.";
         }
 
-        public static List<String> GetInitList()
+        public void RemoveActorHolds()
         {
-            List<String> initListString = new List<string>();
-            if (initList.Count > 0)
-            {
-                var orderedActorList = initList.OrderByDescending(value => value.GetCardValue());
-                foreach (var actor in orderedActorList)
-                {
-                    if (!actor.Hidden && ((actor.Status == 1 && actor.HasCard()) ||
-                                          (actor.Status == 1 && actor.HealthStatus == 0)))
-                        initListString.Add(actor.GetOrderString());
-                }
-
-                if (Program.Deck.JokerHit)
-                {
-                    initListString.Add("(Someone hit a joker this round. Deck will reshuffle.)");
-                }
-                else
-                {
-                    initListString.Add("(There are " + Program.Deck.RemainingCardCount() + " cards left in the deck.)");
-                }
-            }
-            else
-            {
-                initListString.Add("There are no actors in the initiative order. Use !init to add them.");
-            }
-            initListString.Add("Round #" + Program.RoundCount);
-            RemoveActorHolds();
-            return initListString;
-        }
-
-        public static void RemoveActorHolds()
-        {
-            foreach (var actor in initList)
+            foreach (var actor in ActorList)
             {
                 actor.HoldCard = false;
             }
         }
 
-        public static int ActorCount()
+        public int ActorCount()
         {
-            return initList.Count();
+            return ActorList.Count();
         }
 
-        public static void NewRound()
+        public void NewRound()
         {
-            foreach (var actor in initList)
+            foreach (var actor in ActorList)
             {
                 actor.ValueOverride = -1;
-                    if(!actor.HoldCard && actor.HealthStatus != 0 && actor.Status != 0)
-                    actor.DrawCard();
-                Program.Deck.RemoveHolds();
+                if (!actor.HoldCard && actor.HealthStatus != 0 && actor.Status != 0)
+                    DrawCard(actor);
+                Deck.RemoveHolds();
             }
         }
 
-        public static string SetActorInit(string actorName, int value)
+        public string SetActorInit(string actorName, int value)
         {
 
             bool foundActor = false;
-            foreach (var actor in initList)
+            foreach (var actor in ActorList)
             {
                 if (actor.Name == actorName)
                 {
@@ -411,11 +408,11 @@ namespace DiscordInitiative
             return actorName + " has been given an initiative of " + value + ".";
         }
 
-        public static string SetActorAllegiance(string actorName, int value)
+        public string SetActorAllegiance(string actorName, int value)
         {
 
             bool foundActor = false;
-            foreach (var actor in initList)
+            foreach (var actor in ActorList)
             {
                 if (actor.Name == actorName)
                 {
@@ -430,11 +427,11 @@ namespace DiscordInitiative
             return actorName + " has been given an allegiance of " + value + ".";
         }
 
-        public static string SetActorVisibility(string actorName, bool hidden)
+        public string SetActorVisibility(string actorName, bool hidden)
         {
 
             bool foundActor = false;
-            foreach (var actor in initList)
+            foreach (var actor in ActorList)
             {
                 if (actor.Name == actorName)
                 {
@@ -449,103 +446,140 @@ namespace DiscordInitiative
             return actorName + " has their visibility updated.";
         }
 
-        public static bool DrawCardForActor(string actorName)
+
+
+        public void EndCombat()
         {
-            foreach (var actor in initList)
+            ActorList.Clear();
+        }
+
+        public List<String> GetInitList()
+        {
+            List<String> initListString = new List<string>();
+            if (ActorList.Count > 0)
             {
-                if (actor.Name == actorName)
+                var orderedActorList = ActorList.OrderByDescending(value => value.GetCardValue());
+                foreach (var actor in orderedActorList)
                 {
-                    actor.DrawCard();
-                    return true;
+                    if (!actor.Hidden && ((actor.Status == 1 && actor.HasCard()) ||
+                                          (actor.Status == 1 && actor.HealthStatus == 0)))
+                        initListString.Add(actor.GetOrderString());
+                }
+
+                if (Deck.JokerHit)
+                {
+                    initListString.Add("(Someone hit a joker this round. Deck will reshuffle.)");
+                }
+                else
+                {
+                    initListString.Add("(There are " + Deck.RemainingCardCount() + " cards left in the deck.)");
                 }
             }
-
-            return false;
-
+            else
+            {
+                initListString.Add("There are no actors in the initiative order. Use !init to add them.");
+            }
+            initListString.Add("Round #" + RoundCount);
+            return initListString;
         }
 
-        public static void EndCombat()
-        {
-            initList.Clear();
-        }
     }
+
 }
 
+
+
 public class Program
+{
+
+    public static List<BotInstance> BotInstanceList = new List<BotInstance>();
+
+    public struct GlobalConfigStruct
     {
-        public static Deck Deck;
-        public static ActorList ActorList;
-        public static int RoundCount = 1;
+        public static string BotToken = "";
+        public static string VariantDeck = "";
+        public static string LineFormat = "> [SUIT] [CARD] ([VALUE]) - **[CharacterName]** - _[AlliedStatus]_";
+    }
 
-        public struct GlobalConfigStruct
+    public static void SetArgs(string[] args)
+    {
+        if (args.Length > 0)
         {
-            public static string BotToken = "";
-            public static string VariantDeck = "";
-            public static string LineFormat = "> [SUIT] [CARD] ([VALUE]) - **[CharacterName]** - _[AlliedStatus]_";
-        }
-
-        public static void SetArgs(string[] args)
-        {
-            if (args.Length > 0)
+            foreach (string arg in args)
             {
-                foreach (string arg in args)
+                if (arg.Contains("--token="))
                 {
-                    if (arg.Contains("--token="))
-                    {
-                        GlobalConfigStruct.BotToken = arg.Split("=")[1];
-                    }
-                    if (arg.Contains("--deck="))
-                    {
-                        GlobalConfigStruct.VariantDeck = arg.Split("=")[1];
-                    }
+                    GlobalConfigStruct.BotToken = arg.Split("=")[1];
+                }
+                if (arg.Contains("--deck="))
+                {
+                    GlobalConfigStruct.VariantDeck = arg.Split("=")[1];
                 }
             }
         }
+    }
 
-		public static void Main(string[] args)
-			=> new Program().MainAsync(args).GetAwaiter().GetResult();
+	public static void Main(string[] args)
+		=> new Program().MainAsync(args).GetAwaiter().GetResult();
 
-		public async Task MainAsync(string[] args)
-		{
-			SetArgs(args);
-            Deck = new Deck(GlobalConfigStruct.VariantDeck);
-            ActorList = new ActorList();
+	public async Task MainAsync(string[] args)
+	{
+		SetArgs(args);
+        
 
-            using (var services = ConfigureServices())
+        using (var services = ConfigureServices())
 
-                if (Deck.DeckExists)
-                {
-                    var client = services.GetRequiredService<DiscordSocketClient>();
-                    client.Log += Log;
-                client.LoginAsync(TokenType.Bot, GlobalConfigStruct.BotToken);
-                client.StartAsync();
-                await services.GetRequiredService<CommandHandler>().InitializeAsync();
-                await Task.Delay(-1);
-                }
-            Console.WriteLine("Mischief managed. Closing.");
-		}
+            if (true)
+            {
+                var client = services.GetRequiredService<DiscordSocketClient>();
+                client.Log += Log;
+            client.LoginAsync(TokenType.Bot, GlobalConfigStruct.BotToken);
+            client.StartAsync();
+            await services.GetRequiredService<CommandHandler>().InitializeAsync();
+            await Task.Delay(-1);
+            }
+        Console.WriteLine("Mischief managed. Closing.");
+	}
 
-		private Task Log(LogMessage msg)
-		{
-			Console.WriteLine(msg.ToString());
-			return Task.CompletedTask;
-		}
+	private Task Log(LogMessage msg)
+	{
+		Console.WriteLine(msg.ToString());
+		return Task.CompletedTask;
+	}
 
-        private ServiceProvider ConfigureServices()
+    public static BotInstance GetInstanceById(string id)
+    {
+        foreach (BotInstance instance in BotInstanceList)
         {
-            // this returns a ServiceProvider that is used later to call for those services
-            // we can add types we have access to here, hence adding the new using statement:
-            // using csharpi.Services;
-            // the config we build is also added, which comes in handy for setting the command prefix!
-            return new ServiceCollection()
-                //.AddSingleton(_config)
-                .AddSingleton<DiscordSocketClient>()
-                .AddSingleton<CommandService>()
-                .AddSingleton<CommandHandler>()
-                .BuildServiceProvider();
+            if (instance.InstanceId == id)
+                return instance;
         }
 
+        BotInstanceList.Add(new BotInstance(id));
+
+        foreach (BotInstance instance in BotInstanceList)
+        {
+            if (instance.InstanceId == id)
+                return instance;
+        }
+        return null;
     }
+
+    private ServiceProvider ConfigureServices()
+    {
+        // this returns a ServiceProvider that is used later to call for those services
+        // we can add types we have access to here, hence adding the new using statement:
+        // using csharpi.Services;
+        // the config we build is also added, which comes in handy for setting the command prefix!
+        return new ServiceCollection()
+            //.AddSingleton(_config)
+            .AddSingleton<DiscordSocketClient>()
+            .AddSingleton<CommandService>()
+            .AddSingleton<CommandHandler>()
+            .BuildServiceProvider();
+    }
+
+}
 
     public class LoggingService
     {

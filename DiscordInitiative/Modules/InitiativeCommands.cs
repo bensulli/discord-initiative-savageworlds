@@ -10,9 +10,10 @@ namespace DiscordInitiative.Modules
         [Command("init")]
         public async Task InitCommand()
         {
+            BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
             string actorName = Context.User.Username;
 
-            ActorList.Add(actorName, 0);
+            instance.AddActor(actorName,0);
 
             // Acknowledge
             await ReplyAsync(actorName + " added to the initiative order.");
@@ -21,6 +22,7 @@ namespace DiscordInitiative.Modules
         [Command("init")]
         public async Task InitCommandWithArgs([Remainder] string args)
         {
+            BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
             int actorAllegiance = 0;
             var argList = args.Split(" ");
             string actorName = Context.User.Username;
@@ -52,7 +54,7 @@ namespace DiscordInitiative.Modules
                 for (int i = 0; i < argList.Length - 1; i++)
                 {
                     actorName += argList[i] + " ";
-                    
+
                 }
 
                 try
@@ -68,7 +70,7 @@ namespace DiscordInitiative.Modules
                 }
             }
             actorName = actorName.Trim();
-            ActorList.Add(actorName, actorAllegiance);
+            instance.AddActor(actorName, actorAllegiance);
 
             // send simple string reply
             await ReplyAsync(actorName + " added to the initiative order.");
@@ -77,9 +79,10 @@ namespace DiscordInitiative.Modules
         [Command("list")]
         public async Task ListCommand()
         {
+            BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
             var sb = new StringBuilder();
 
-            foreach (var line in ActorList.GetInitList())
+            foreach (var line in instance.GetInitList())
             {
                 sb.AppendLine(line);
             }
@@ -91,11 +94,12 @@ namespace DiscordInitiative.Modules
         [Command("draw")]
         public async Task DrawCommand()
         {
+            BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
             var sb = new StringBuilder();
 
-            if (ActorList.DrawCardForActor(Context.User.Username))
+            if (instance.DrawCardForActor(Context.User.Username))
             {
-                foreach (var line in ActorList.GetInitList())
+                foreach (var line in instance.GetInitList())
                 {
                     sb.AppendLine(line);
                 }
@@ -113,6 +117,7 @@ namespace DiscordInitiative.Modules
         [Command("draw")]
         public async Task DrawCommandWithArgs([Remainder] string args)
         {
+            BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
             var sb = new StringBuilder();
 
             var argList = args.Split(" ");
@@ -138,9 +143,9 @@ namespace DiscordInitiative.Modules
             }
             actorName = actorName.Trim();
 
-            if (ActorList.DrawCardForActor(actorName))
+            if (instance.DrawCardForActor(actorName))
             {
-                foreach (var line in ActorList.GetInitList())
+                foreach (var line in instance.GetInitList())
                 {
                     sb.AppendLine(line);
                 }
@@ -163,6 +168,7 @@ namespace DiscordInitiative.Modules
         [Command("initHidden")]
         public async Task InitHiddenCommandWithArgs([Remainder] string args)
         {
+            BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
             int actorType = 0;
             var argList = args.Split(" ");
             string actorName = Context.User.Username;
@@ -209,7 +215,7 @@ namespace DiscordInitiative.Modules
                 }
             }
 
-            ActorList.Add(actorName, actorType, true);
+            instance.AddActor(actorName, actorType, true);
 
             // send simple string reply
             await ReplyAsync(actorName + " added to the initiative order as hidden.");
@@ -218,20 +224,22 @@ namespace DiscordInitiative.Modules
         [Command("round")]
         public async Task RoundCommand()
         {
+            BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
+            instance.RoundCount++;
             var sb = new StringBuilder();
 
-            if (Program.Deck.RemainingCardCount() < ActorList.ActorCount() || Program.Deck.JokerHit)
+            if (instance.Deck.RemainingCardCount() < instance.ActorCount() || instance.Deck.JokerHit)
             {
-                Program.Deck.Shuffle();
+                instance.Deck.Shuffle();
             }
 
-            ActorList.NewRound();
-            foreach (var line in ActorList.GetInitList())
+            instance.NewRound();
+            foreach (var line in instance.GetInitList())
             {
                 sb.AppendLine(line);
             }
+            instance.RemoveActorHolds();
 
-            Program.RoundCount++;
             await ReplyAsync(sb.ToString());
         }
 
@@ -244,6 +252,7 @@ namespace DiscordInitiative.Modules
         [Command("hold")]
         public async Task HoldCommandWithArguments([Remainder] string args)
         {
+            BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
             var argList = args.Split(" ");
             string response;
             string actorName;
@@ -259,11 +268,11 @@ namespace DiscordInitiative.Modules
                 for (int i = 1; i < argList.Length; i++)
                 {
                     actorName = actorName + " " + argList[i];
-                    
+
                 }
             }
             actorName = actorName.Trim();
-            response = ActorList.HoldCard(actorName);
+            response = instance.HoldCard(actorName);
 
             await ReplyAsync(response);
         }
@@ -277,6 +286,7 @@ namespace DiscordInitiative.Modules
         [Command("remove")]
         public async Task RemoveCommandWithArguments([Remainder] string args)
         {
+            BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
             var argList = args.Split(" ");
             string response;
             string actorName = "";
@@ -296,11 +306,11 @@ namespace DiscordInitiative.Modules
                 for (int i = 1; i < argList.Length; i++)
                 {
                     actorName = actorName + " " + argList[i];
-                    
+
                 }
             }
             actorName = actorName.Trim();
-            response = ActorList.RemoveActor(actorName);
+            response = instance.RemoveActor(actorName);
 
             await ReplyAsync(response);
         }
@@ -308,12 +318,14 @@ namespace DiscordInitiative.Modules
         [Command("kill")]
         public async Task KillCommand()
         {
+            BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
             await ReplyAsync("Please specify an actor to kill.");
         }
 
         [Command("kill")]
         public async Task KillCommandWithArguments([Remainder] string args)
         {
+            BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
             var argList = args.Split(" ");
             string response;
             string actorName = "";
@@ -333,11 +345,11 @@ namespace DiscordInitiative.Modules
                 for (int i = 1; i < argList.Length; i++)
                 {
                     actorName = actorName + " " + argList[i];
-                    
+
                 }
             }
             actorName = actorName.Trim();
-            response = ActorList.KillActor(actorName);
+            response = instance.KillActor(actorName);
 
             await ReplyAsync(response);
         }
@@ -345,6 +357,7 @@ namespace DiscordInitiative.Modules
         [Command("show")]
         public async Task ShowCommandWithArguments([Remainder] string args)
         {
+            BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
             var argList = args.Split(" ");
             string response;
             string actorName = "";
@@ -367,7 +380,7 @@ namespace DiscordInitiative.Modules
                 }
             }
 
-            response = ActorList.ShowActor(actorName);
+            response = instance.ShowActor(actorName);
 
             await ReplyAsync(response);
         }
@@ -381,6 +394,7 @@ namespace DiscordInitiative.Modules
         [Command("set")]
         public async Task SetCommandWithArguments([Remainder] string args)
         {
+            BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
             var sb = new StringBuilder();
             var argList = args.Split(" ");
             string response = "";
@@ -414,23 +428,23 @@ namespace DiscordInitiative.Modules
                     actorName = actorName.Trim();
                     if (command == "init")
                     {
-                        response = ActorList.SetActorInit(actorName, value);
+                        response = instance.SetActorInit(actorName, value);
                     }
                     else if (command == "allegiance" || command == "Allegiance")
                     {
-                        response = ActorList.SetActorAllegiance(actorName, value);
+                        response = instance.SetActorAllegiance(actorName, value);
                     }
                     else if (command == "hidden" || command == "Hidden")
                     {
                         if (value == 1)
-                            ActorList.SetActorVisibility(actorName, true);
+                            instance.SetActorVisibility(actorName, true);
                         else if (value == 0)
-                            ActorList.SetActorVisibility(actorName, false);
+                            instance.SetActorVisibility(actorName, false);
                     }
                 }
             }
 
-            foreach (var line in ActorList.GetInitList())
+            foreach (var line in instance.GetInitList())
             {
                 sb.AppendLine(line);
             }
@@ -441,8 +455,9 @@ namespace DiscordInitiative.Modules
         [Command("end")]
         public async Task EndCommand()
         {
-            ActorList.EndCombat();
-            Program.RoundCount = 1;
+            BotInstance instance = Program.GetInstanceById(Context.Channel.Id.ToString());
+            instance.EndCombat();
+            instance.RoundCount = 0;
             await ReplyAsync("Combat has resolved. I hope some of you are still alive.");
         }
 

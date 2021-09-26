@@ -6,6 +6,9 @@ This Discord bot can be used to manage the initiative order and card deck for a 
 1. Create a new Discord Bot
 2. Build and run the executable with the "--token=<DiscordBotToken>" argument
 
+# Initiative Instances
+This bot now treats each server and channel as a separate instance. This allows you to run multiple initiative lists on one server (by using separate channels) and ensures that each server using the bot does not share one global initiative list with everyone else using the bot :)
+
 # Managing Initiative
 1. Add your actors to the initiative order with !init
 2. Start the first and subsequent rounds with !round
