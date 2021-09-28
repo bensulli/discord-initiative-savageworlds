@@ -3,6 +3,9 @@ services:
   discord-initiative-savageworlds:
     build:
       context: .
+      args:
+        - TOKEN=${TOKEN}
+        - DECK=${DECK}
     environment:
         - TOKEN=${TOKEN}
         - DECK=${DECK}
